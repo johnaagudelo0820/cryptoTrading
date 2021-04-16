@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const CoinDetailScreen = () => {
+const CoinDetailScreen = ({ route }) => {
+  const { coin } = route.params;
   return (
     <View>
-      <Text>Coin detail screen</Text>
+      <Text>{coin.name}</Text>
     </View>
   );
 }

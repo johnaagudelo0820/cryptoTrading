@@ -4,16 +4,20 @@ import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import CoinItem from './CoinItem';
 import Http from '../../libs/http';
 
+import Color from '../../res/colors';
+
 const API_COINS =  'https://api.coinlore.net/api/tickers/';
 
 const CoinsScreen = (props) => {
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
 
-/*   const handlerPress = () => {
+  const handlerPress = (coin) => {
     console.log('go to detail', props);
-    props.navigation.navigate('CoinDetail');
-  } */
+    props.navigation.navigate('CoinDetail', {
+      coin
+    });
+  }
 
   useEffect(() => {
     const fetchCoins = async () => {
@@ -38,7 +42,10 @@ const CoinsScreen = (props) => {
         <FlatList
           data={coins}
           renderItem={({ item }) => (
-            <CoinItem {...item} />
+            <CoinItem
+              {...item}
+              onPress={() => handlerPress(item)}
+            />
           )}
         />
       )}
@@ -49,7 +56,7 @@ const CoinsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Color.charade,
     justifyContent: 'center',
   },
   titleText: {
