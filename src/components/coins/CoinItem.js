@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Platform, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 
 import Color from '../../res/colors';
 
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomColor: Color.zircon,
     borderBottomWidth: 1,
-    marginLeft: Platform.OS == 'ios' ? 16 : 0,
   },
   row: {
     flexDirection: "row",
