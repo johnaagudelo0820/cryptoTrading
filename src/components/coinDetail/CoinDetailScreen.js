@@ -1,22 +1,32 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, SectionList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, SectionList, FlatList } from 'react-native';
 
+import Http from '../../libs/http';
 import Color from '../../res/colors';
 
+import CoinMarketItem from './coinMarketItem';
+
+const urlSymbol = symbol => `https://c1.coinlore.com/img/25x25/${symbol}.png`;
+const urlMarket = coinId => `https://api.coinlore.net/api/coin/markets/?id=${coinId}`;
+
 const CoinDetailScreen = ({ route, navigation }) => {
+  const [markets, setMarkets] = useState([]);
   const { coin } = route.params;
   navigation.setOptions({ title: coin.symbol })
+
+  useEffect(() => {
+    getMarkets(coin.id)
+  }, [])
 
   const getSymbolIcon = () => {
     const { name } = coin;
     if (name) {
       const symbol = name.toLowerCase().replace(' ', '-');
-      return `https://c1.coinlore.com/img/25x25/${symbol}.png`;
+      return urlSymbol(symbol);
     }
   }
 
   const getSection = () => {
-    console.log(coin);
     const sections = [
       {
         title: 'Market cap',
@@ -34,6 +44,12 @@ const CoinDetailScreen = ({ route, navigation }) => {
     return sections;
   }
 
+  const getMarkets = async (coinId) => {
+    const url = urlMarket(coinId);
+    const markets = await Http.instance.get(url);
+    setMarkets(markets);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.subHeader}>
@@ -45,6 +61,7 @@ const CoinDetailScreen = ({ route, navigation }) => {
       </View>
 
       <SectionList
+        style={styles.section}
         sections={getSection()}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
@@ -56,6 +73,17 @@ const CoinDetailScreen = ({ route, navigation }) => {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionText}>{section.title}</Text>
           </View>
+        )}
+      />
+
+      <Text style={styles.marketTitle}>Markets</Text>
+
+      <FlatList
+        style={styles.list}
+        data={markets}
+        horizontal={true}
+        renderItem={({ item }) => (
+          <CoinMarketItem {...item} />
         )}
       />
     </View>
@@ -83,6 +111,9 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
   },
+  section: {
+    maxHeight: 220,
+  },
   sectionHeader: {
     backgroundColor: 'rgba(0,0,0,0.2)',
     padding: 8,
@@ -98,6 +129,16 @@ const styles = StyleSheet.create({
     color: Color.white,
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  list: {
+    maxHeight: 100,
+  },
+  marketTitle: {
+    color: Color.white,
+    fontSize: 18,
+    marginBottom: 8,
+    marginLeft: 8,
+    fontWeight: 'bold',
   }
 })
 

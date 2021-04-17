@@ -13,7 +13,6 @@ const CoinsScreen = (props) => {
   const [loading, setLoading] = useState(true);
 
   const handlerPress = (coin) => {
-    console.log('go to detail', props);
     props.navigation.navigate('CoinDetail', {
       coin
     });

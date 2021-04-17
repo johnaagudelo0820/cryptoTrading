@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import Color from '../../res/colors';
 
 const CoinItem = ({ name, symbol, percent_change_1h, price_usd, onPress }) => {
-
   const getImageArrow = () => {
     if (percent_change_1h > 0) {
       return require('../../assets/arrow_up.png');
