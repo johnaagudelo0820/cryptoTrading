@@ -3,14 +3,27 @@ import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 
 import CoinItem from './CoinItem';
 import Http from '../../libs/http';
-
 import Color from '../../res/colors';
+
+import CoinSearch from './coinSearch';
 
 const API_COINS =  'https://api.coinlore.net/api/tickers/';
 
 const CoinsScreen = (props) => {
   const [coins, setCoins] = useState([]);
+  const [allCoins, setAllCoins] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchGetCoins();
+  }, []);
+
+  const fetchGetCoins = async () => {
+    const coins = await Http.instance.get(API_COINS);
+    setCoins(coins.data);
+    setAllCoins(coins.data);
+    setLoading(false)
+  };
 
   const handlerPress = (coin) => {
     props.navigation.navigate('CoinDetail', {
@@ -18,19 +31,17 @@ const CoinsScreen = (props) => {
     });
   }
 
-  useEffect(() => {
-    const fetchCoins = async () => {
-      const coins = await Http.instance.get(API_COINS);
-      setCoins(coins.data);
-      setLoading(false)
-    };
-    fetchCoins();
-  }, []);
-
-  console.log(coins);
+  const handlerSearch = (query) => {
+    const coinsFilter = allCoins.filter((coin) => coin.name.toLowerCase().includes(query.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(query.toLowerCase()));
+    setCoins(coinsFilter);
+  }
 
   return (
     <View style={styles.container}>
+      <CoinSearch
+        onChange={handlerSearch}
+      />
       {loading ? (
         <ActivityIndicator
           color="#fff"
