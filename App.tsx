@@ -10,16 +10,20 @@ import Color from './src/res/colors';
 
 const Tabs = createBottomTabNavigator();
 
+const tabBarOptions = {
+  tintColor: "#fefefe",
+  style: {
+    backgroundColor: Color.blackPearl,
+  }
+};
+
+console.log(tabBarOptions.tintColor);
+
 const App = () => {
   return (
     <NavigationContainer>
       <Tabs.Navigator
-        tabBarOptions={{
-          tintColor: "#fefefe",
-          style: {
-            backgroundColor: Color.blackPearl,
-          }
-        }}
+        tabBarOptions={tabBarOptions}
       >
           <Tabs.Screen
             name="Coins"
